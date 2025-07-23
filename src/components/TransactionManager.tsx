@@ -175,11 +175,37 @@ const TransactionManager: React.FC = () => {
           </select>
 
           <div className="flex space-x-2">
-            <button className="flex items-center space-x-2 bg-slate-700/50 border border-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors">
+            <button 
+              onClick={() => {
+                // Reset all filters
+                setSearchTerm('');
+                setStatusFilter('all');
+                setRiskFilter('all');
+              }}
+              className="flex items-center space-x-2 bg-slate-700/50 border border-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors"
+            >
               <Filter className="h-4 w-4" />
-              <span>Filter</span>
+              <span>Clear Filters</span>
             </button>
-            <button className="flex items-center space-x-2 bg-slate-700/50 border border-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors">
+            <button 
+              onClick={() => {
+                const csvContent = [
+                  'ID,Order ID,Customer Name,Customer Email,Amount,Currency,Payment Method,Risk Score,Status,Location,Date',
+                  ...filteredTransactions.map(t => 
+                    `${t.id},${t.orderId},${t.customerName},${t.customerEmail},${t.amount},${t.currency},${t.paymentMethod},${t.riskScore},${t.status},${t.location},${new Date(t.timestamp).toLocaleDateString()}`
+                  )
+                ].join('\n');
+                
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `transactions_${new Date().toISOString().split('T')[0]}.csv`;
+                link.click();
+                URL.revokeObjectURL(url);
+              }}
+              className="flex items-center space-x-2 bg-slate-700/50 border border-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors"
+            >
               <Download className="h-4 w-4" />
               <span>Export</span>
             </button>

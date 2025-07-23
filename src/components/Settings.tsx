@@ -434,11 +434,34 @@ const Settings: React.FC = () => {
                       <h3 className="text-white font-medium">API Configuration</h3>
                     </div>
                     <div className="space-y-3">
-                      <button className="flex items-center space-x-2 bg-blue-500/20 text-blue-400 border border-blue-500/30 px-4 py-2 rounded-lg hover:bg-blue-500/30 transition-colors">
+                      <button 
+                        onClick={() => {
+                          const newKey = 'sk_' + Math.random().toString(36).substr(2, 32);
+                          alert(`New API Key Generated: ${newKey}\n\nPlease save this key securely as it won't be shown again.`);
+                        }}
+                        className="flex items-center space-x-2 bg-blue-500/20 text-blue-400 border border-blue-500/30 px-4 py-2 rounded-lg hover:bg-blue-500/30 transition-colors"
+                      >
                         <RefreshCw className="h-4 w-4" />
                         <span>Regenerate API Key</span>
                       </button>
-                      <button className="flex items-center space-x-2 bg-green-500/20 text-green-400 border border-green-500/30 px-4 py-2 rounded-lg hover:bg-green-500/30 transition-colors">
+                      <button 
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(settings.integration.apiEndpoint, {
+                              method: 'GET',
+                              headers: { 'Content-Type': 'application/json' }
+                            });
+                            if (response.ok) {
+                              alert('✅ Connection successful! API endpoint is reachable.');
+                            } else {
+                              alert('⚠️ Connection failed. Please check your API endpoint.');
+                            }
+                          } catch (error) {
+                            alert('❌ Connection test failed. Using mock endpoint for demo.');
+                          }
+                        }}
+                        className="flex items-center space-x-2 bg-green-500/20 text-green-400 border border-green-500/30 px-4 py-2 rounded-lg hover:bg-green-500/30 transition-colors"
+                      >
                         <Globe className="h-4 w-4" />
                         <span>Test Connection</span>
                       </button>

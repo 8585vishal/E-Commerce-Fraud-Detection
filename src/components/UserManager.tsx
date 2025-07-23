@@ -193,7 +193,25 @@ const UserManager: React.FC = () => {
             <option value="suspended">Suspended</option>
           </select>
 
-          <button className="bg-slate-700/50 border border-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors">
+          <button 
+            onClick={() => {
+              const csvContent = [
+                'ID,Name,Email,Role,Department,Status,Last Login,Created At',
+                ...filteredUsers.map(u => 
+                  `${u.id},${u.name},${u.email},${u.role},${u.department},${u.status},${new Date(u.lastLogin).toLocaleDateString()},${new Date(u.createdAt).toLocaleDateString()}`
+                )
+              ].join('\n');
+              
+              const blob = new Blob([csvContent], { type: 'text/csv' });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.download = `users_${new Date().toISOString().split('T')[0]}.csv`;
+              link.click();
+              URL.revokeObjectURL(url);
+            }}
+            className="bg-slate-700/50 border border-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors"
+          >
             Export Users
           </button>
         </div>

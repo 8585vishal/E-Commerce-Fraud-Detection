@@ -161,7 +161,10 @@ const Dashboard: React.FC = () => {
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white">Recent Transactions</h2>
-            <button className="text-blue-400 hover:text-blue-300 flex items-center space-x-1 text-sm">
+            <button 
+              onClick={() => window.location.hash = '#transactions'}
+              className="text-blue-400 hover:text-blue-300 flex items-center space-x-1 text-sm transition-colors"
+            >
               <span>View All</span>
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -201,7 +204,10 @@ const Dashboard: React.FC = () => {
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white">Active Fraud Cases</h2>
-            <button className="text-blue-400 hover:text-blue-300 flex items-center space-x-1 text-sm">
+            <button 
+              onClick={() => window.location.hash = '#fraud-cases'}
+              className="text-blue-400 hover:text-blue-300 flex items-center space-x-1 text-sm transition-colors"
+            >
               <span>View All</span>
               <ChevronRight className="h-4 w-4" />
             </button>

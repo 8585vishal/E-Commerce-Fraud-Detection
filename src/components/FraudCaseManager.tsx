@@ -201,9 +201,27 @@ const FraudCaseManager: React.FC = () => {
             <option value="critical">Critical</option>
           </select>
 
-          <button className="flex items-center space-x-2 bg-slate-700/50 border border-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors">
+          <button 
+            onClick={() => {
+              const csvContent = [
+                'ID,Transaction ID,Risk Level,Fraud Type,Description,Investigator,Status,Created At,Updated At,Resolution',
+                ...filteredCases.map(c => 
+                  `${c.id},${c.transactionId},${c.riskLevel},${c.fraudType},"${c.description}",${c.investigator},${c.status},${new Date(c.createdAt).toLocaleDateString()},${new Date(c.updatedAt).toLocaleDateString()},"${c.resolution || ''}"`
+                )
+              ].join('\n');
+              
+              const blob = new Blob([csvContent], { type: 'text/csv' });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.download = `fraud_cases_${new Date().toISOString().split('T')[0]}.csv`;
+              link.click();
+              URL.revokeObjectURL(url);
+            }}
+            className="flex items-center space-x-2 bg-slate-700/50 border border-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors"
+          >
             <Filter className="h-4 w-4" />
-            <span>Advanced Filters</span>
+            <span>Export Cases</span>
           </button>
         </div>
       </div>

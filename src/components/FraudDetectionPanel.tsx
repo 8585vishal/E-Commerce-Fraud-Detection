@@ -124,6 +124,11 @@ const FraudDetectionPanel: React.FC<FraudDetectionPanelProps> = ({ onTransaction
               value={transactionId}
               onChange={(e) => setTransactionId(e.target.value)}
               placeholder="txn_001"
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && (transactionId || paymentId)) {
+                  handleQuickAnalysis();
+                }
+              }}
               className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -137,6 +142,11 @@ const FraudDetectionPanel: React.FC<FraudDetectionPanelProps> = ({ onTransaction
               value={paymentId}
               onChange={(e) => setPaymentId(e.target.value)}
               placeholder="pay_123456"
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && (transactionId || paymentId)) {
+                  handleQuickAnalysis();
+                }
+              }}
               className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

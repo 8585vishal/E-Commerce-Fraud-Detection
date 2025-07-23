@@ -176,6 +176,7 @@ const DatasetManager: React.FC = () => {
         <div className="flex space-x-3">
           <button
             onClick={() => window.location.reload()}
+            onClick={() => window.location.reload()}
             className="flex items-center space-x-2 bg-slate-700/50 border border-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors"
           >
             <RefreshCw className="h-4 w-4" />
@@ -361,7 +362,18 @@ const DatasetManager: React.FC = () => {
           </select>
 
           <div className="flex space-x-2">
-            <button className="flex items-center space-x-2 bg-slate-700/50 border border-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors">
+            <button 
+              onClick={() => {
+                // Toggle advanced filters panel
+                const panel = document.getElementById('advanced-filters');
+                if (panel) {
+                  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+                } else {
+                  alert('Advanced filters: Date range, amount range, risk score range, and location filters coming soon!');
+                }
+              }}
+              className="flex items-center space-x-2 bg-slate-700/50 border border-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors"
+            >
               <Filter className="h-4 w-4" />
               <span>Advanced Filter</span>
             </button>

@@ -76,20 +76,38 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange }) => 
               <input
                 type="text"
                 placeholder="Search transactions, cases..."
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    const searchTerm = (e.target as HTMLInputElement).value;
+                    if (searchTerm) {
+                      alert(`Searching for: "${searchTerm}"\n\nThis would search across all transactions and fraud cases.`);
+                    }
+                  }
+                }}
                 className="pl-10 pr-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-80"
               />
             </div>
           </div>
           
           <div className="flex items-center space-x-4">
-            <button className="relative p-2 text-slate-400 hover:text-white transition-colors">
+            <button 
+              onClick={() => {
+                alert('🔔 Notifications:\n\n• 3 new high-risk transactions detected\n• 2 fraud cases require investigation\n• 1 system alert: API rate limit approaching');
+              }}
+              className="relative p-2 text-slate-400 hover:text-white transition-colors"
+            >
               <Bell className="h-5 w-5" />
               <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full flex items-center justify-center">
                 <span className="text-xs text-white font-bold">3</span>
               </span>
             </button>
             
-            <div className="flex items-center space-x-3">
+            <div 
+              onClick={() => {
+                alert('👤 User Profile:\n\nAdmin User\nSecurity Analyst\n\nOptions:\n• View Profile\n• Account Settings\n• Logout');
+              }}
+              className="flex items-center space-x-3 cursor-pointer hover:bg-slate-700/30 p-2 rounded-lg transition-colors"
+            >
               <div className="text-right">
                 <p className="text-sm font-medium text-white">Admin User</p>
                 <p className="text-xs text-slate-400">Security Analyst</p>
