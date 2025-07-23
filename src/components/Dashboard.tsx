@@ -6,14 +6,17 @@ import {
   DollarSign,
   Shield,
   Eye,
-  ChevronRight
+  ChevronRight,
+  Zap
 } from 'lucide-react';
 import { mockDashboardStats, mockTransactions, mockFraudCases } from '../data/mockData';
+import { analyzeFraudTrends } from '../utils/fraudDetection';
 
 const Dashboard: React.FC = () => {
   const stats = mockDashboardStats;
   const recentTransactions = mockTransactions.slice(0, 5);
   const recentCases = mockFraudCases;
+  const fraudTrends = analyzeFraudTrends(mockTransactions);
 
   const statCards = [
     {
@@ -50,6 +53,18 @@ const Dashboard: React.FC = () => {
     }
   ];
 
+  // Add fraud trends to stats
+  const enhancedStatCards = [
+    ...statCards,
+    {
+      title: 'Fraud Detection Rate',
+      value: `${fraudTrends.fraudRate.toFixed(1)}%`,
+      change: '-1.2%',
+      trend: 'down',
+      icon: Zap,
+      color: 'indigo'
+    }
+  ];
   const getRiskColor = (score: number) => {
     if (score >= 80) return 'text-red-400';
     if (score >= 60) return 'text-orange-400';
@@ -82,8 +97,8 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statCards.map((stat, index) => {
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        {enhancedStatCards.map((stat, index) => {
           const Icon = stat.icon;
           const isPositive = stat.trend === 'up';
           const TrendIcon = isPositive ? TrendingUp : TrendingDown;
@@ -113,6 +128,33 @@ const Dashboard: React.FC = () => {
         })}
       </div>
 
+      {/* Fraud Trends Summary */}
+      <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
+        <h2 className="text-xl font-bold text-white mb-6">Fraud Detection Insights</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-red-400 mb-2">
+              ${fraudTrends.totalFraudAmount.toLocaleString()}
+            </div>
+            <p className="text-slate-400">Total Fraud Amount</p>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-orange-400 mb-2">
+              {fraudTrends.commonIndicators[0]?.count || 0}
+            </div>
+            <p className="text-slate-400">Most Common Indicator</p>
+            <p className="text-xs text-slate-500 mt-1">
+              {fraudTrends.commonIndicators[0]?.type || 'None'}
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-blue-400 mb-2">
+              {fraudTrends.riskDistribution.find(r => r.level === 'high')?.count || 0}
+            </div>
+            <p className="text-slate-400">High Risk Transactions</p>
+          </div>
+        </div>
+      </div>
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Transactions */}

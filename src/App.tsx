@@ -5,6 +5,7 @@ import TransactionManager from './components/TransactionManager';
 import FraudCaseManager from './components/FraudCaseManager';
 import UserManager from './components/UserManager';
 import Settings from './components/Settings';
+import FraudDetectionPanel from './components/FraudDetectionPanel';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -13,6 +14,8 @@ function App() {
     switch (activeTab) {
       case 'dashboard':
         return <Dashboard />;
+      case 'fraud-detection':
+        return <FraudDetectionPanel />;
       case 'transactions':
         return <TransactionManager />;
       case 'fraud-cases':

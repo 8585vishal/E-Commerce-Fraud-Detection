@@ -7,12 +7,15 @@ import {
   Filter,
   Download,
   Search,
-  RefreshCw
+  RefreshCw,
+  Shield,
+  AlertTriangle
 } from 'lucide-react';
 import { Transaction } from '../types';
 import { mockTransactions } from '../data/mockData';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import TransactionModal from './TransactionModal';
+import { detectFraud } from '../utils/fraudDetection';
 
 const TransactionManager: React.FC = () => {
   const [transactions, setTransactions] = useLocalStorage('transactions', mockTransactions);
@@ -22,6 +25,7 @@ const TransactionManager: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [riskFilter, setRiskFilter] = useState('all');
+  const [showFraudAnalysis, setShowFraudAnalysis] = useState<string | null>(null);
 
   const filteredTransactions = transactions.filter((transaction) => {
     const matchesSearch = 
@@ -80,6 +84,26 @@ const TransactionManager: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const handleFraudCheck = (transaction: Transaction) => {
+    const analysis = detectFraud(transaction);
+    
+    // Update transaction with new risk score and status
+    const updatedTransaction = {
+      ...transaction,
+      riskScore: analysis.riskScore,
+      status: analysis.isFraud ? 'flagged' as const : 
+              analysis.riskLevel === 'high' ? 'pending' as const : 'approved' as const
+    };
+    
+    setTransactions(transactions.map(t => 
+      t.id === transaction.id ? updatedTransaction : t
+    ));
+    
+    setShowFraudAnalysis(transaction.id);
+    
+    // Show analysis results
+    alert(`Fraud Analysis Complete!\n\nRisk Score: ${analysis.riskScore}%\nRisk Level: ${analysis.riskLevel.toUpperCase()}\nFraud Detected: ${analysis.isFraud ? 'YES' : 'NO'}\n\nRecommendation: ${analysis.recommendation}`);
+  };
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'approved': return 'bg-green-500/20 text-green-400 border-green-500/30';
@@ -235,6 +259,13 @@ const TransactionManager: React.FC = () => {
                         <Eye className="h-4 w-4" />
                       </button>
                       <button
+                        onClick={() => handleFraudCheck(transaction)}
+                        className="text-purple-400 hover:text-purple-300 transition-colors"
+                        title="Run Fraud Detection"
+                      >
+                        <Shield className="h-4 w-4" />
+                      </button>
+                      <button
                         onClick={() => handleEdit(transaction)}
                         className="text-green-400 hover:text-green-300 transition-colors"
                       >
@@ -261,6 +292,92 @@ const TransactionManager: React.FC = () => {
         )}
       </div>
 
+      {/* Fraud Analysis Results */}
+      {showFraudAnalysis && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowFraudAnalysis(null)}></div>
+          
+          <div className="relative bg-slate-800 border border-slate-700 rounded-xl p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white">Fraud Analysis Results</h2>
+              <button
+                onClick={() => setShowFraudAnalysis(null)}
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            
+            {(() => {
+              const transaction = transactions.find(t => t.id === showFraudAnalysis);
+              if (!transaction) return null;
+              
+              const analysis = detectFraud(transaction);
+              
+              return (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                      <div className="text-2xl font-bold text-white">{analysis.riskScore}%</div>
+                      <div className="text-slate-400">Risk Score</div>
+                    </div>
+                    <div>
+                      <div className={`px-3 py-1 rounded text-sm font-medium ${
+                        analysis.riskLevel === 'critical' ? 'bg-red-500/20 text-red-400' :
+                        analysis.riskLevel === 'high' ? 'bg-orange-500/20 text-orange-400' :
+                        analysis.riskLevel === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                        'bg-green-500/20 text-green-400'
+                      }`}>
+                        {analysis.riskLevel.toUpperCase()}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-white">{analysis.confidence}%</div>
+                      <div className="text-slate-400">Confidence</div>
+                    </div>
+                  </div>
+                  
+                  <div className={`p-4 rounded-lg ${
+                    analysis.isFraud ? 'bg-red-500/10 border border-red-500/30' : 'bg-green-500/10 border border-green-500/30'
+                  }`}>
+                    <div className={`font-medium mb-2 ${analysis.isFraud ? 'text-red-400' : 'text-green-400'}`}>
+                      {analysis.isFraud ? '⚠️ FRAUD DETECTED' : '✅ TRANSACTION APPROVED'}
+                    </div>
+                    <p className={analysis.isFraud ? 'text-red-300' : 'text-green-300'}>
+                      {analysis.recommendation}
+                    </p>
+                  </div>
+                  
+                  {analysis.indicators.length > 0 && (
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-4">Risk Indicators</h3>
+                      <div className="space-y-3">
+                        {analysis.indicators.map((indicator, index) => (
+                          <div key={index} className="flex items-start space-x-3 p-3 bg-slate-700/30 rounded-lg">
+                            <AlertTriangle className={`h-4 w-4 mt-1 ${
+                              indicator.severity === 'critical' ? 'text-red-400' :
+                              indicator.severity === 'high' ? 'text-orange-400' :
+                              indicator.severity === 'medium' ? 'text-yellow-400' :
+                              'text-green-400'
+                            }`} />
+                            <div className="flex-1">
+                              <div className="flex justify-between items-start">
+                                <h4 className="font-medium text-white text-sm">{indicator.type}</h4>
+                                <span className="text-xs text-slate-400">+{indicator.score}</span>
+                              </div>
+                              <p className="text-slate-400 text-xs mt-1">{indicator.description}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      )}
       {/* Transaction Modal */}
       <TransactionModal
         isOpen={isModalOpen}

@@ -8,7 +8,8 @@ import {
   CreditCard,
   Search,
   Bell,
-  User
+  User,
+  Zap
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -20,6 +21,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+    { id: 'fraud-detection', label: 'Fraud Detection', icon: Zap },
     { id: 'transactions', label: 'Transactions', icon: CreditCard },
     { id: 'fraud-cases', label: 'Fraud Cases', icon: AlertTriangle },
     { id: 'users', label: 'Users', icon: Users },
