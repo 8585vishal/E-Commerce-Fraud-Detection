@@ -20,10 +20,16 @@ const FRAUD_PATTERNS = {
     'temp-mail.org', '10minutemail.com', 'guerrillamail.com', 
     'mailinator.com', 'throwaway.email', 'tempmail.net'
   ],
-  highRiskCountries: ['Nigeria', 'Romania', 'Ghana', 'Indonesia', 'Philippines'],
+  highRiskCountries: ['Nigeria', 'Romania', 'Ghana', 'Indonesia', 'Philippines', 'Unknown'],
   suspiciousIPs: ['203.0.113.1', '198.51.100.1', '192.0.2.1'],
   blacklistedDevices: ['fp_fraud123', 'fp_suspicious456'],
-  fraudulentCards: ['4111111111111111', '5555555555554444']
+  fraudulentCards: ['4111111111111111', '5555555555554444'],
+  indianCities: [
+    'Mumbai, INDIA', 'Delhi, INDIA', 'Bangalore, INDIA', 'Chennai, INDIA', 
+    'Pune, INDIA', 'Hyderabad, INDIA', 'Kolkata, INDIA', 'Kochi, INDIA',
+    'Ahmedabad, INDIA', 'Jaipur, INDIA', 'Lucknow, INDIA', 'Surat, INDIA',
+    'Kanpur, INDIA', 'Nagpur, INDIA', 'Indore, INDIA', 'Bhopal, INDIA'
+  ]
 };
 
 // Velocity tracking (in real app, this would be in a database)

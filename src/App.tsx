@@ -6,6 +6,7 @@ import FraudCaseManager from './components/FraudCaseManager';
 import UserManager from './components/UserManager';
 import Settings from './components/Settings';
 import FraudDetectionPanel from './components/FraudDetectionPanel';
+import DatasetManager from './components/DatasetManager';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -20,6 +21,8 @@ function App() {
         return <TransactionManager />;
       case 'fraud-cases':
         return <FraudCaseManager />;
+      case 'datasets':
+        return <DatasetManager />;
       case 'users':
         return <UserManager />;
       case 'settings':

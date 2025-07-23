@@ -28,8 +28,8 @@ const UserManager: React.FC = () => {
   const [users] = useState<SystemUser[]>([
     {
       id: 'user_001',
-      name: 'Sarah Chen',
-      email: 'sarah.chen@company.com',
+      name: 'Suresh Iyer',
+      email: 'suresh.iyer@company.com',
       role: 'admin',
       department: 'Security',
       status: 'active',
@@ -39,8 +39,8 @@ const UserManager: React.FC = () => {
     },
     {
       id: 'user_002',
-      name: 'Mike Rodriguez',
-      email: 'mike.rodriguez@company.com',
+      name: 'Ravi Krishnan',
+      email: 'ravi.krishnan@company.com',
       role: 'investigator',
       department: 'Fraud Detection',
       status: 'active',
@@ -50,8 +50,8 @@ const UserManager: React.FC = () => {
     },
     {
       id: 'user_003',
-      name: 'Emily Watson',
-      email: 'emily.watson@company.com',
+      name: 'Meera Bansal',
+      email: 'meera.bansal@company.com',
       role: 'analyst',
       department: 'Risk Management',
       status: 'active',
@@ -61,8 +61,8 @@ const UserManager: React.FC = () => {
     },
     {
       id: 'user_004',
-      name: 'David Kim',
-      email: 'david.kim@company.com',
+      name: 'Karthik Reddy',
+      email: 'karthik.reddy@company.com',
       role: 'viewer',
       department: 'Compliance',
       status: 'inactive',

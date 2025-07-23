@@ -197,7 +197,7 @@ const FraudDetectionPanel: React.FC<FraudDetectionPanelProps> = ({ onTransaction
               type="text"
               value={mockTransaction.customerName}
               onChange={(e) => setMockTransaction(prev => ({ ...prev, customerName: e.target.value }))}
-              placeholder="John Doe"
+              placeholder="Rajesh Kumar"
               className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -224,7 +224,7 @@ const FraudDetectionPanel: React.FC<FraudDetectionPanelProps> = ({ onTransaction
               type="text"
               value={mockTransaction.location}
               onChange={(e) => setMockTransaction(prev => ({ ...prev, location: e.target.value }))}
-              placeholder="New York, USA"
+              placeholder="Mumbai, INDIA"
               className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
